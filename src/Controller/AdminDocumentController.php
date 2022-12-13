@@ -72,6 +72,7 @@ class AdminDocumentController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $document->getId(), $request->request->get('_token'))) {
             $documentRepository->remove($document, true);
+            $this->addFlash('success', 'Le document a bien été supprimé');
         }
 
         return $this->redirectToRoute('app_admin_document_index', [], Response::HTTP_SEE_OTHER);
