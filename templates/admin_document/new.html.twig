@@ -1,11 +1,14 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout_admin.html.twig' %}
 
-{% block title %}New Document{% endblock %}
+{% block title %}New Document
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Document</h1>
+	<main class="container-fluid">
+		<h1>Créer un nouveau document</h1>
 
-    {{ include('admin_document/_form.html.twig') }}
+		{{ include('admin_document/_form.html.twig') }}
 
-    <a href="{{ path('app_admin_document_index') }}">back to list</a>
+		<a class="btn btn-outline-dark" href="{{ path('app_admin_document_index') }}">Retour</a>
+	</main>
 {% endblock %}

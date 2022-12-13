@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\DocumentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DocumentRepository::class)]
 class Document
@@ -15,12 +16,18 @@ class Document
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(length: 13, nullable: true)]
+    #[Assert\Length(
+        min: 10,
+        max: 13
+    )]
     private ?string $isbn = null;
 
     public function getId(): ?int

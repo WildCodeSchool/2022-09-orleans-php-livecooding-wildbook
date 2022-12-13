@@ -21,6 +21,15 @@
 		{% block navbar %}{% endblock %}
 	</header>
 	<body>
+		{% block flashes %}
+			{% for label, messages in app.flashes %}
+				{% for message in messages %}
+					<div class="alert alert-{{ label }}">
+						{{ message }}
+					</div>
+				{% endfor %}
+			{% endfor %}
+		{% endblock %}
 		{% block body %}{% endblock %}
 	</body>
 </html>

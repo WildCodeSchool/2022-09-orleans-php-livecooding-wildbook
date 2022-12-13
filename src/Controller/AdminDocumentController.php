@@ -30,7 +30,7 @@ class AdminDocumentController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $documentRepository->save($document, true);
-
+            $this->addFlash('success', 'Le document a bien été créé');
             return $this->redirectToRoute('app_admin_document_index', [], Response::HTTP_SEE_OTHER);
         }
 
