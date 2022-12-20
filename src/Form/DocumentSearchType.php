@@ -2,6 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Category;
+use App\Entity\DocumentSearch;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,13 +19,22 @@ class DocumentSearchType extends AbstractType
             ->setMethod('GET')
             ->add('input', SearchType::class, [
                 'label' => 'Rechercher un document',
+            ])
+            ->add('category', EntityType::class, [
+                'required' => false,
+                'class' => Category::class,
+                'choice_label' => 'nameColor',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.name', 'ASC');
+                },
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            // Configure your form options here
+            'data_class' => DocumentSearch::class,
             'csrf_protection' => false
         ]);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\Document;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -42,14 +43,18 @@ class DocumentRepository extends ServiceEntityRepository
     //    /**
     //     * @return Document[] Returns an array of Document objects
     //     */
-    public function searchDocument(string $search): array
+    public function searchDocument(string $search, ?string $category): array
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.title LIKE :search')
-            ->setParameter('search', '%' . $search . '%')
-            ->orderBy('d.title', 'ASC')
-            ->getQuery()
-            ->getResult();
+        $queryBuilder = $this->createQueryBuilder('d')
+            ->andWhere('d.title LIKE :search');
+        if ($category) {
+            $queryBuilder->join('d.category', 'c')
+                ->andWhere('c.name = :category')
+                ->setParameter('category', $category);
+        }
+        $queryBuilder->setParameter('search', '%' . $search . '%')
+            ->orderBy('d.title', 'ASC');
+        return $queryBuilder->getQuery()->getResult();
     }
 
     //    public function findOneBySomeField($value): ?Document

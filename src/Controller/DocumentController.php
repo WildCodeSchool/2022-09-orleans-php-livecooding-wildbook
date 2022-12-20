@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
+use App\Entity\DocumentSearch;
 use App\Form\DocumentSearchType;
 use App\Repository\DocumentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,15 +16,19 @@ class DocumentController extends AbstractController
     #[Route('/document', name: 'app_document')]
     public function index(Request $request, DocumentRepository $documentRepository): Response
     {
-        $form = $this->createForm(DocumentSearchType::class);
+        $documentSearch = new DocumentSearch();
+        $form = $this->createForm(DocumentSearchType::class, $documentSearch);
         $form->handleRequest($request);
 
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $documents = $documentRepository->searchDocument($data['input']);
+            $category = '';
+            if ($documentSearch->getCategory() instanceof Category) {
+                $category = $documentSearch->getCategory()->getName();
+            }
+
+            $documents = $documentRepository->searchDocument($documentSearch->getInput(), $category);
         } else {
-            $documents = $documentRepository->findBy([], ['title' => 'ASC'])    ;
+            $documents = $documentRepository->findBy([], ['title' => 'ASC']);
         }
 
         return $this->renderForm('document/index.html.twig', [
