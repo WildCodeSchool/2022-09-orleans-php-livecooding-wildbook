@@ -19,8 +19,7 @@ class CategoryType extends AbstractType
             ])
             ->add('color', ColorType::class, [
                 'label' => 'Couleur',
-            ]) 
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
