@@ -1,0 +1,39 @@
+{% extends 'layout_admin.html.twig' %}
+
+{% block title %}Document index
+{% endblock %}
+
+{% block body %}
+	<main class="container-fluid">
+		<h1>Document index</h1>
+
+		<table class="table table-hover">
+			<thead class="bg-primary">
+				<tr>
+					<th>Titre</th>
+					<th>Category</th>
+					<th>Isbn</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for document in documents %}
+					<tr>
+						<td>{{ document.title }}</td>
+						<td>{{ document.category.name }}</td>
+						<td>{{ document.isbn }}</td>
+						<td>
+							<a class="btn btn-primary btn-sm" href="{{ path('app_admin_document_edit', {'id': document.id}) }}">Modifier</a>
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="5">no records found</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		<a class="btn btn-success" href="{{ path('app_admin_document_new') }}">Ajouter un nouveau document</a>
+	</main>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Hello DocumentController!
+{% endblock %}
+
+{% block body %}
+
+	<main class="container-fluid">
+		<h1>Documents</h1>
+
+		<div>
+			{{ form_start(form) }}
+			{{ form_widget(form) }}
+			<button class="btn btn-primary">Rechercher</button>
+			{{ form_end(form) }}
+		</div>
+
+		<div class="row">
+			{% for document in documents %}
+				<div class="col-sm-6 col-md-4 col-lg-3">
+					<div class="card">
+						<img src="{{ asset('build/images/document_placeholder.png') }}" class="card-img-top" alt="">
+						<div class=" card-body">
+							<h2 class="card-title">{{ document.title }}</h2>
+							<p class="badge" style="background-color: {{ document.category.color }}">{{ document.category.name }}</p>
+							<p class="card-text">{{ document.description|nl2br }}</p>
+							<a href="#" class="btn btn-primary">Voir le document</a>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</main>
+	{% endblock %}
