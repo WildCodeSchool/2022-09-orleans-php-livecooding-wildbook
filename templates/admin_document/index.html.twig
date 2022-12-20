@@ -11,6 +11,7 @@
 			<thead class="bg-primary">
 				<tr>
 					<th>Titre</th>
+					<th>Category</th>
 					<th>Isbn</th>
 					<th></th>
 				</tr>
@@ -19,6 +20,7 @@
 				{% for document in documents %}
 					<tr>
 						<td>{{ document.title }}</td>
+						<td>{{ document.category.name }}</td>
 						<td>{{ document.isbn }}</td>
 						<td>
 							<a class="btn btn-primary btn-sm" href="{{ path('app_admin_document_edit', {'id': document.id}) }}">Modifier</a>

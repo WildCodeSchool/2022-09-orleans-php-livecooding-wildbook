@@ -2,7 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Category;
 use App\Entity\Document;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,7 +25,14 @@ class DocumentType extends AbstractType
             ])
             ->add('description')
             ->add('isbn')
-        ;
+            ->add('category', EntityType::class, [
+                'class' => Category::class,
+                'choice_label' => 'nameColor',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.name', 'ASC');
+                },
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

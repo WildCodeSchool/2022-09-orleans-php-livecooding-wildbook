@@ -92,4 +92,9 @@ class Category
 
         return $this;
     }
+
+    public function getNameColor(): string
+    {
+        return $this->getName() . ' (' . $this->getColor() . ')';
+    }
 }
