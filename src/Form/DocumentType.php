@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class DocumentType extends AbstractType
 {
@@ -32,6 +33,9 @@ class DocumentType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->orderBy('c.name', 'ASC');
                 },
+            ])
+            ->add('imageFile', VichImageType::class, [
+                'required' => false,
             ]);
     }
 

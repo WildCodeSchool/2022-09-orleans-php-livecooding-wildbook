@@ -1,0 +1,26 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Document!
+{% endblock %}
+
+{% block body %}
+
+	<main class="container-fluid">
+		<h1>{{ document.title }}</h1>
+
+		<div class="row">
+			<div class="col-md-4">
+				{% if document.imageName %}
+					<img src="{{ vich_uploader_asset(document) }}" class="card-img-top" alt="">
+				{% else %}
+					<img src="{{ asset('build/images/document_placeholder.png') }}" class="card-img-top" alt="">
+				{% endif %}
+			</div>
+			<div class="col-md-8">
+				<h2 class="">{{ document.title }}</h2>
+				<p class="badge" style="background-color: {{ document.category.color }}">{{ document.category.name }}</p>
+				<p class="">{{ document.description|nl2br }}</p>
+			</div>
+		</div>
+	</main>
+{% endblock %}

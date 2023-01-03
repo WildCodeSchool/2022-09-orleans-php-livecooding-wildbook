@@ -2,12 +2,17 @@
 
 namespace App\Entity;
 
-use App\Repository\DocumentRepository;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\DocumentRepository;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: DocumentRepository::class)]
+#[Vich\Uploadable]
 class Document
 {
     #[ORM\Id]
@@ -23,6 +28,20 @@ class Document
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[Assert\File(
+        maxSize: '1M',
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp']
+    )]
+    #[Vich\UploadableField(mapping: 'documents', fileNameProperty: 'imageName')]
+    private ?File $imageFile = null;
+
+    #[Assert\Length(max: 255)]
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $imageName = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $updatedAt = null;
+
     #[ORM\Column(length: 13, nullable: true)]
     #[Assert\Length(
         min: 10,
@@ -32,6 +51,11 @@ class Document
 
     #[ORM\ManyToOne(inversedBy: 'documents')]
     private ?Category $category = null;
+
+    public function __construct()
+    {
+        $this->updatedAt = new DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -84,5 +108,31 @@ class Document
         $this->category = $category;
 
         return $this;
+    }
+
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new DateTimeImmutable();
+        }
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageName(?string $imageName): void
+    {
+        $this->imageName = $imageName;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
     }
 }

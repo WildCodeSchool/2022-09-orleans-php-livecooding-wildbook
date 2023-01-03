@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Document;
 use App\Entity\DocumentSearch;
 use App\Form\DocumentSearchType;
 use App\Repository\DocumentRepository;
@@ -34,6 +35,14 @@ class DocumentController extends AbstractController
         return $this->renderForm('document/index.html.twig', [
             'documents' => $documents,
             'form' => $form,
+        ]);
+    }
+
+    #[Route('/document/{document}', name: 'app_document_show')]
+    public function show(Document $document): Response
+    {
+        return $this->renderForm('document/show.html.twig', [
+            'document' => $document,
         ]);
     }
 }
