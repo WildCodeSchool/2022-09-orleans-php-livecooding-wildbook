@@ -32,4 +32,9 @@ class LoanManager
 
         return $status ?? self::LOAN_STATUSES['AVAILABLE'];
     }
+
+    public function isAvailable(Document $document): bool
+    {
+        return $this->documentStatus($document) === self::LOAN_STATUSES['AVAILABLE'];
+    }
 }

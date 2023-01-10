@@ -5,9 +5,14 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Document;
 use App\Entity\DocumentSearch;
+use App\Entity\Loan;
+use App\Entity\User;
 use App\Form\DocumentSearchType;
 use App\Repository\DocumentRepository;
+use App\Repository\LoanRepository;
 use App\Service\LoanManager;
+use DateTime;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,12 +46,43 @@ class DocumentController extends AbstractController
         ]);
     }
 
+    #[Route('/document/loan/{document}', name: 'app_document_loan', methods: ['POST'])]
+    public function loan(
+        Request $request,
+        Document $document,
+        LoanRepository $loanRepository,
+        LoanManager $loanManager
+    ): Response {
+        if ($this->isCsrfTokenValid('loan' . $document->getId(), $request->request->get('_token'))) {
+            if (!$loanManager->isAvailable($document)) {
+                throw new Exception('Impossible');
+            }
+
+            $loan = new Loan();
+            $loan->setDocument($document);
+
+            /** @var User */
+            $user = $this->getUser();
+            $loan->setUser($user);
+            $loan->setLoanDate(new DateTime());
+            $loanRepository->save($loan, true);
+
+            $this->addFlash('success', 'Le document a bien été emprunté');
+        }
+
+        return $this->redirectToRoute('app_document_show', [
+            'document' => $document->getId()
+        ], Response::HTTP_SEE_OTHER);
+    }
+
+
     #[Route('/document/{document}', name: 'app_document_show')]
     public function show(Document $document, LoanManager $loanManager): Response
     {
         return $this->renderForm('document/show.html.twig', [
             'document' => $document,
-            'status' => $loanManager->documentStatus($document)
+            'status' => $loanManager->documentStatus($document),
+            'is_available' => $loanManager->isAvailable($document)
         ]);
     }
 }
