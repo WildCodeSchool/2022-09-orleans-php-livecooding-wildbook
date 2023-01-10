@@ -7,11 +7,14 @@ use App\Entity\Document;
 use App\Entity\DocumentSearch;
 use App\Form\DocumentSearchType;
 use App\Repository\DocumentRepository;
+use App\Service\LoanManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[IsGranted('ROLE_USER')]
 class DocumentController extends AbstractController
 {
     #[Route('/document', name: 'app_document')]
@@ -39,10 +42,11 @@ class DocumentController extends AbstractController
     }
 
     #[Route('/document/{document}', name: 'app_document_show')]
-    public function show(Document $document): Response
+    public function show(Document $document, LoanManager $loanManager): Response
     {
         return $this->renderForm('document/show.html.twig', [
             'document' => $document,
+            'status' => $loanManager->documentStatus($document)
         ]);
     }
 }

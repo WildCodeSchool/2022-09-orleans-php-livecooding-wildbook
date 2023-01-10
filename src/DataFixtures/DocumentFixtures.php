@@ -11,7 +11,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class DocumentFixtures extends Fixture implements DependentFixtureInterface
 {
-    public const DOCUMENT_NUMBER = 20;
+    public const DOCUMENT_NUMBER = 10;
 
     public function __construct(private Filesystem $filesystem)
     {
@@ -33,7 +33,7 @@ class DocumentFixtures extends Fixture implements DependentFixtureInterface
             $document->setImageName($imageName);
             $category = $this->getReference('category' . rand(0, count(CategoryFixtures::CATEGORIES) - 1));
             $document->setCategory($category);
-
+            $this->addReference('document' . $i, $document);
             $manager->persist($document);
         }
 

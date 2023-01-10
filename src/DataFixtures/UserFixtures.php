@@ -23,7 +23,7 @@ class UserFixtures extends Fixture
             $user,
             'azerty'
         );
-
+        $this->addReference('user', $user);
         $user->setPassword($hashedPassword);
         $manager->persist($user);
 
@@ -36,6 +36,7 @@ class UserFixtures extends Fixture
             $admin,
             'raclette'
         );
+        $this->addReference('admin', $admin);
 
         $admin->setPassword($hashedPassword);
         $manager->persist($admin);

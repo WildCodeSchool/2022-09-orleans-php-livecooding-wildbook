@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use DateTime;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\DocumentRepository;
@@ -52,9 +54,13 @@ class Document
     #[ORM\ManyToOne(inversedBy: 'documents')]
     private ?Category $category = null;
 
+    #[ORM\OneToMany(mappedBy: 'document', targetEntity: Loan::class)]
+    private Collection $loans;
+
     public function __construct()
     {
         $this->updatedAt = new DateTime();
+        $this->loans = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -134,5 +140,35 @@ class Document
     public function getImageName(): ?string
     {
         return $this->imageName;
+    }
+
+    /**
+     * @return Collection<int, Loan>
+     */
+    public function getLoans(): Collection
+    {
+        return $this->loans;
+    }
+
+    public function addLoan(Loan $loan): self
+    {
+        if (!$this->loans->contains($loan)) {
+            $this->loans->add($loan);
+            $loan->setDocument($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLoan(Loan $loan): self
+    {
+        if ($this->loans->removeElement($loan)) {
+            // set the owning side to null (unless already changed)
+            if ($loan->getDocument() === $this) {
+                $loan->setDocument(null);
+            }
+        }
+
+        return $this;
     }
 }
