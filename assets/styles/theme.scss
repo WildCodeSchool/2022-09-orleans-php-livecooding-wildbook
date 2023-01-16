@@ -4,3 +4,10 @@ $primary: #FF9900;
 
 // the ~ allows you to reference things in node_modules
 @import "~bootstrap/scss/bootstrap";
+
+.navbar-nav .show > .nav-link, .navbar-nav .nav-link.active {
+    color: $primary;
+    background-color: $light;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
