@@ -17,7 +17,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Mailer\MailerInterface;
 
 #[IsGranted('ROLE_USER')]
 class DocumentController extends AbstractController
@@ -51,7 +53,8 @@ class DocumentController extends AbstractController
         Request $request,
         Document $document,
         LoanRepository $loanRepository,
-        LoanManager $loanManager
+        LoanManager $loanManager,
+        MailerInterface $mailer,
     ): Response {
         if ($this->isCsrfTokenValid('loan' . $document->getId(), $request->request->get('_token'))) {
             if (!$loanManager->isAvailable($document)) {
@@ -66,6 +69,18 @@ class DocumentController extends AbstractController
             $loan->setUser($user);
             $loan->setLoanDate(new DateTime());
             $loanRepository->save($loan, true);
+
+            // envoyer mail confirmation
+            /** @var User */
+            $user = $this->getUser();
+
+            $email = (new Email())
+                ->from($this->getParameter('mailer_from'))
+                ->to($user->getEmail())
+                ->subject('Livre réservé wildbook')
+                ->html($this->renderView('document/loanConfirmationEmail.html.twig', ['document' => $document]));
+
+            $mailer->send($email);
 
             $this->addFlash('success', 'Le document a bien été emprunté');
         }
