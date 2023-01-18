@@ -58,6 +58,7 @@ class Document
     private Collection $loans;
 
     #[ORM\ManyToMany(targetEntity: Author::class, inversedBy: 'documents')]
+    #[ORM\OrderBy(['lastName' => 'ASC'])]
     private Collection $authors;
 
     public function __construct()
