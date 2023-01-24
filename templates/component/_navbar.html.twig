@@ -4,8 +4,8 @@
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-		<div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-			<ul class="navbar-nav">
+		<div class="collapse navbar-collapse justify-content-end " id="navbarNavAltMarkup">
+			<ul class="navbar-nav gap-2">
 				<li class="nav-item">
 					<a class="nav-link {{ app.request.attributes.get('_route') == 'app_document' ? 'active' : ''}}" aria-current="page" href="{{ path('app_document') }}">Documents</a>
 				</li>
@@ -27,6 +27,12 @@
 						<a class="nav-link btn btn-success" href="{{ path('app_login') }}">Se connecter</a>
 					</li>
 				{% endif %}
+				{% if is_granted('ROLE_ADMIN') %}
+					<li class="nav-item">
+						<a class="nav-link btn btn-info" href="{{ path('app_admin_document_index') }}">Admin</a>
+					</li>
+				{% endif %}
+
 			</ul>
 		</div>
 	</nav>
