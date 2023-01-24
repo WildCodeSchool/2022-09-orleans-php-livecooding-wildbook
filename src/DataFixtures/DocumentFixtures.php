@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Author;
 use App\Entity\Document;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -34,6 +35,10 @@ class DocumentFixtures extends Fixture implements DependentFixtureInterface
             $category = $this->getReference('category' . rand(0, count(CategoryFixtures::CATEGORIES) - 1));
             $document->setCategory($category);
             $this->addReference('document' . $i, $document);
+            $nbAuthor = rand(1, 4);
+            for ($j = 0; $j < $nbAuthor; $j++) {
+                $document->addAuthor($this->getReference('author' . rand(0, AuthorFixtures::AUTHOR_NUMBER - 1)));
+            }
             $manager->persist($document);
         }
 
@@ -44,6 +49,7 @@ class DocumentFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             CategoryFixtures::class,
+            AuthorFixtures::class
         ];
     }
 }

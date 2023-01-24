@@ -7,7 +7,9 @@
 
 	<main class="container-fluid">
 		<h1>{{ document.title }}</h1>
-
+		{{ component('favorite', {
+			document: document
+		} )}}
 		<div class="row">
 			<div class="col-md-4">
 				{% if document.imageName %}
@@ -21,14 +23,22 @@
 				<span class="badge bg-info">{{ status }}</span>
 
 				{% if(is_available) %}
-				<form method="post" action="{{ path('app_document_loan', {'document': document.id}) }}">
-					<input type="hidden" name="_token" value="{{ csrf_token('loan' ~ document.id) }}">
-					<button class="btn btn-primary">Emprunter</button>
-				</form>
+					<form method="post" action="{{ path('app_document_loan', {'document': document.id}) }}">
+						<input type="hidden" name="_token" value="{{ csrf_token('loan' ~ document.id) }}">
+						<button class="btn btn-primary">Emprunter</button>
+					</form>
 				{% endif %}
 
 				<p class="badge" style="background-color: {{ document.category.color }}">{{ document.category.name }}</p>
 				<p class="">{{ document.description|nl2br }}</p>
+
+				<h3>Authors</h3>
+				<ul>
+					{% for author in document.authors %}
+						<li>{{ author.firstName }}
+							{{ author.lastName }}</li>
+					{% endfor %}
+				</ul>
 			</div>
 		</div>
 	</main>

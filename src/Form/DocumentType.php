@@ -2,15 +2,17 @@
 
 namespace App\Form;
 
+use App\Entity\Author;
 use App\Entity\Category;
 use App\Entity\Document;
 use Doctrine\ORM\EntityRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class DocumentType extends AbstractType
 {
@@ -33,6 +35,13 @@ class DocumentType extends AbstractType
                     return $er->createQueryBuilder('c')
                         ->orderBy('c.name', 'ASC');
                 },
+            ])
+            ->add('authors', EntityType::class, [
+                'class' => Author::class,
+                'choice_label' => 'fullName',
+                'multiple' => true,
+                'expanded' => true,
+                'autocomplete' => true,
             ])
             ->add('imageFile', VichImageType::class, [
                 'required' => false,

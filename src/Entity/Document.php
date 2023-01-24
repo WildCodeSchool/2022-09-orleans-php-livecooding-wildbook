@@ -57,10 +57,19 @@ class Document
     #[ORM\OneToMany(mappedBy: 'document', targetEntity: Loan::class)]
     private Collection $loans;
 
+    #[ORM\ManyToMany(targetEntity: Author::class, inversedBy: 'documents')]
+    #[ORM\OrderBy(['lastName' => 'ASC'])]
+    private Collection $authors;
+
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'favorites')]
+    private Collection $users;
+
     public function __construct()
     {
         $this->updatedAt = new DateTime();
         $this->loans = new ArrayCollection();
+        $this->authors = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -168,6 +177,54 @@ class Document
                 $loan->setDocument(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Author>
+     */
+    public function getAuthors(): Collection
+    {
+        return $this->authors;
+    }
+
+    public function addAuthor(Author $author): self
+    {
+        if (!$this->authors->contains($author)) {
+            $this->authors->add($author);
+        }
+
+        return $this;
+    }
+
+    public function removeAuthor(Author $author): self
+    {
+        $this->authors->removeElement($author);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        $this->users->removeElement($user);
 
         return $this;
     }
