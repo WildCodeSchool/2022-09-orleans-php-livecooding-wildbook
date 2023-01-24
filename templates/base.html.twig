@@ -20,7 +20,7 @@
 	<header>
 		{% block navbar %}{% endblock %}
 	</header>
-	<body>
+	<body {{ stimulus_controller('symfony/ux-swup/swup') }}>
 		{% block flashes %}
 			{% for label, messages in app.flashes %}
 				{% for message in messages %}
@@ -29,7 +29,10 @@
 					</div>
 				{% endfor %}
 			{% endfor %}
-		{% endblock %}
+		{% endblock %}  
+		
+		<div id="swup">
 		{% block body %}{% endblock %}
+		</div>
 	</body>
 </html>

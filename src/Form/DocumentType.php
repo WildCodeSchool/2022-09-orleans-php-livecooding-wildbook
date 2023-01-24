@@ -36,10 +36,12 @@ class DocumentType extends AbstractType
                         ->orderBy('c.name', 'ASC');
                 },
             ])
-            ->add('authors', CollectionType::class, [
-                'entry_type' => EntityType::class,
-                'entry_options' => ['class' => Author::class, 'choice_label' => 'fullName'],
-                'allow_add' => true
+            ->add('authors', EntityType::class, [
+                'class' => Author::class,
+                'choice_label' => 'fullName',
+                'multiple' => true,
+                'expanded' => true,
+                'autocomplete' => true,
             ])
             ->add('imageFile', VichImageType::class, [
                 'required' => false,

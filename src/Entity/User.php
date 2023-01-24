@@ -43,9 +43,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Loan::class)]
     private Collection $loans;
 
+    #[ORM\ManyToMany(targetEntity: Document::class, mappedBy: 'users')]
+    private Collection $favorites;
+
     public function __construct()
     {
         $this->loans = new ArrayCollection();
+        $this->favorites = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -179,6 +183,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($loan->getUser() === $this) {
                 $loan->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Document>
+     */
+    public function getFavorites(): Collection
+    {
+        return $this->favorites;
+    }
+
+    public function addFavorite(Document $favorite): self
+    {
+        if (!$this->favorites->contains($favorite)) {
+            $this->favorites->add($favorite);
+            $favorite->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavorite(Document $favorite): self
+    {
+        if ($this->favorites->removeElement($favorite)) {
+            $favorite->removeUser($this);
         }
 
         return $this;

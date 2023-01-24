@@ -61,11 +61,15 @@ class Document
     #[ORM\OrderBy(['lastName' => 'ASC'])]
     private Collection $authors;
 
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'favorites')]
+    private Collection $users;
+
     public function __construct()
     {
         $this->updatedAt = new DateTime();
         $this->loans = new ArrayCollection();
         $this->authors = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -197,6 +201,30 @@ class Document
     public function removeAuthor(Author $author): self
     {
         $this->authors->removeElement($author);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        $this->users->removeElement($user);
 
         return $this;
     }

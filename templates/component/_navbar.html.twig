@@ -15,6 +15,7 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{{ path('app_home') }}#contact">Contact</a>
 				</li>
+				{{ component('category') }}
 				{% if is_granted('ROLE_USER') %}
 					<li class="nav-item">
 						<a class="nav-link {{ app.request.attributes.get('_route') == 'app_profile' ? 'active' : ''}}" href="{{ path('app_profile') }}">Profil</a>
